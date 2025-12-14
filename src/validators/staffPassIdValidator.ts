@@ -4,6 +4,7 @@ export const validateStaffPassId = (staffPassId: string): boolean => {
 
     const idUnexpectedMsg = 'Staff Pass ID value does not follow expected Staff Pass ID format:'
     const idProvidedMsg = `Staff Pass ID value provided: ${staffPassId}`
+    const idSuffixMsg = 'Staff Pass ID does not end with a 12-character alphanumeric string'
     const idParts = staffPassId.split('_')
 
     // Check whether Staff Pass ID is empty.
@@ -33,6 +34,7 @@ export const validateStaffPassId = (staffPassId: string): boolean => {
     else if (idParts.length == 2) {
         const allowedPrefixes = ['BOSS', 'MANAGER', 'STAFF'];
         const allowedSuffixRegex = /^[a-zA-Z0-9]{12}$/;
+        const allNumericSuffixRegex = /^\d{12}$/;
         const specialCharRegex = /[^a-zA-Z0-9]+/
         const staffPassIdPrefix = idParts[0].toUpperCase();
         const staffPassIdSuffix = idParts[1].toUpperCase();
@@ -47,15 +49,22 @@ export const validateStaffPassId = (staffPassId: string): boolean => {
 
             // Check if suffix contains non-alphanumeric characters.
             if (specialCharRegex.test(staffPassIdSuffix)) {
-                throw new ValidationError(`${idUnexpectedMsg} Staff Pass ID does not end with a 12-character alphanumeric string, contains special characters. ${idProvidedMsg}`)
+                throw new ValidationError(`${idUnexpectedMsg} ${idSuffixMsg}, contains special characters. ${idProvidedMsg}`)
             }
 
-            // Check whether Staff Pass ID is invalid because length is != 13.
+            // Check whether Staff Pass ID is invalid because length is != 12.
             else if (staffPassIdSuffix.length != 12) {
-                throw new ValidationError(`${idUnexpectedMsg} Staff Pass ID does not end with a 12-character alphanumeric string. ${idProvidedMsg}`)
+                throw new ValidationError(`${idUnexpectedMsg} ${idSuffixMsg}, length is 12 characters. ${idProvidedMsg}`)
             }
 
-            // Not sure if Staff Pass ID is allowed to have all numerical or all alphabetical values.
+            else {
+                throw new ValidationError(`${idUnexpectedMsg}. ${idSuffixMsg}. ${idProvidedMsg}`)
+            }
+        }
+
+        // Check if Staff Pass ID is all numeric characters. 
+        else if (allNumericSuffixRegex.test(staffPassIdSuffix)) {
+            throw new ValidationError(`${idUnexpectedMsg} ${idSuffixMsg}, suffix only contains numeric characters. ${idProvidedMsg}`)
         }
     }
 
