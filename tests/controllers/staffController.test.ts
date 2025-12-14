@@ -7,7 +7,7 @@ import { Request, Response } from 'express'; // Import types for mocking
 // Mocks
 
 // StaffPassIdValidator
-jest.mock('../src/validators/staffPassIdValidator', () => ({
+jest.mock('../../src/validators/staffPassIdValidator', () => ({
     validateStaffPassId: jest.fn(),
 }));
 
