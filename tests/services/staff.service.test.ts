@@ -1,5 +1,5 @@
-import { StaffService, StaffPassNotFoundError } from '../src/services/staff.service';
-import { StorageService } from '../src/services/storage.service';
+import { StaffService, StaffPassNotFoundError } from '../../src/services/staff.service';
+import { StorageService } from '../../src/services/storage.service';
 
 // Mocks
 interface MockStaffRecord {

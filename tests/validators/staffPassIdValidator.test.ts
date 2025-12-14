@@ -1,5 +1,5 @@
-import { validateStaffPassId } from '../src/validators/staffPassIdValidator';
-import { ValidationError } from '../src/errors/validationError'; // Import the custom error class
+import { validateStaffPassId } from '../../src/validators/staffPassIdValidator';
+import { ValidationError } from '../../src/errors/validationError'; // Import the custom error class
 
 // Helper variables for common parts of error messages
     const idUnexpectedMsg = 'Staff Pass ID value does not follow expected Staff Pass ID format:';

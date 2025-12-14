@@ -1,7 +1,7 @@
-import { StaffController } from '../src/controllers/staffController';
-import { StaffService, StaffPassNotFoundError } from '../src/services/staff.service';
-import { validateStaffPassId } from '../src/validators/staffPassIdValidator';
-import { ValidationError } from '../src/errors/validationError';
+import { StaffController } from '../../src/controllers/staffController';
+import { StaffService, StaffPassNotFoundError } from '../../src/services/staff.service';
+import { validateStaffPassId } from '../../src/validators/staffPassIdValidator';
+import { ValidationError } from '../../src/errors/validationError';
 import { Request, Response } from 'express'; // Import types for mocking
 
 // Mocks
