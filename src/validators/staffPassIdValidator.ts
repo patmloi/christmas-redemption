@@ -8,13 +8,8 @@ export const validateStaffPassId = (staffPassId: string): boolean => {
     const idParts = staffPassId.split('_')
 
     // Check whether Staff Pass ID is empty.
-    if (staffPassId.trim() == '') {
+    if (staffPassId == '') {
         throw new ValidationError('Staff Pass ID cannot be an empty value.');
-    }
-
-    // Check whether Staff Pass ID is a string.
-    else if (!staffPassId || typeof staffPassId !== 'string') {
-        throw new ValidationError(`${idUnexpectedMsg} Staff Pass ID must be a string value. ${idProvidedMsg}`);
     }
 
     // Check whether Staff Pass ID contains exactly one underscore.
@@ -54,7 +49,7 @@ export const validateStaffPassId = (staffPassId: string): boolean => {
 
             // Check whether Staff Pass ID is invalid because length is != 12.
             else if (staffPassIdSuffix.length != 12) {
-                throw new ValidationError(`${idUnexpectedMsg} ${idSuffixMsg}, length is 12 characters. ${idProvidedMsg}`)
+                throw new ValidationError(`${idUnexpectedMsg} ${idSuffixMsg}, length is not 12 characters. ${idProvidedMsg}`)
             }
 
             else {

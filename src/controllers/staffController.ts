@@ -14,7 +14,7 @@ export class StaffController {
         console.log('Original staffPassId:', staffPassId)
         
         // Convert Staff Pass ID to uppercase string
-        staffPassId = String(staffPassId).toUpperCase();
+        staffPassId = String(staffPassId).toUpperCase().trim();
         console.log('Extracted staffPassId:', staffPassId);
 
         // Validate Staff Pass ID before retrieval
