@@ -22,15 +22,20 @@ export class CsvLoaderService {
       }
 
       fs.createReadStream(csvFilePath)
-        .pipe(csv())
+        .pipe(csv({ 
+          mapHeaders: ({ header }) => header.trim() 
+        }))
         .on('data', (row) => {
+          console.log('📝 Raw row:', row);
           records.push({
             staff_pass_id: row.staff_pass_id || row['staff_pass_id'],
             team_name: row.team_name || row['team_name'],
-            created_at: row.created_at || row['created_at']
+            created_at: parseInt(row.created_at || row['created_at'])
           });
         })
         .on('end', () => {
+          console.log(`📊 Total records parsed: ${records.length}`); // DEBUG
+          console.log('📊 First record:', records[0]); // DEBUG
           // Insert all records into database
           this.insertStaffRecords(records);
           console.log(`Loaded ${records.length} staff records from CSV`);
@@ -48,12 +53,12 @@ export class CsvLoaderService {
 
     // Use transaction for better performance
     const insert = this.db.prepare(
-      'INSERT OR IGNORE INTO staff (staff_pass_id, team_name) VALUES (?, ?)'
+      'INSERT OR IGNORE INTO staff (staff_pass_id, team_name, created_at) VALUES (?, ?, ?)'
     );
 
     const insertMany = this.db.transaction((records: StaffRecord[]) => {
       for (const record of records) {
-        insert.run(record.staff_pass_id, record.team_name);
+        insert.run(record.staff_pass_id, record.team_name, record.created_at);
       }
     });
 
