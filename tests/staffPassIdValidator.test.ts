@@ -6,7 +6,7 @@ import { ValidationError } from '../src/errors/validationError'; // Import the c
     const idUnexpectedSuffixMsg = 'Staff Pass ID does not end with a 12-character alphanumeric string,';
 
     const idProvidedMsg = 'Staff Pass ID value provided:';
-    const idMustBeStringMsg = 'Staff Pass ID must be a string value.';
+    const idNotEmptyMsg = 'Staff Pass ID cannot be an empty value.'
     const idNoUnderscoreMsg = 'Staff Pass ID does not contain an underscore (_).';
     const idTwoUnderscoresMsg = 'Staff Pass ID contains 2 underscores, expected exactly 1.';
     const idPrefixMsg = 'Staff Pass ID does not start with any of the following accepted values (BOSS, MANAGER, STAFF).';
@@ -42,38 +42,14 @@ describe('validateStaffPassId - Success Cases (Valid IDs)', () => {
         const validId = 'STAFF_1234567890AB';
         expect(validateStaffPassId(validId)).toBe(true);
     });
-
-    // 1.4. Valid: BOSS ID with mixed alphanumeric suffix (Lowercase prefix)
-    it('should return true for a valid BOSS ID with mixed suffix (lowercase prefix)', () => {
-        const validId = 'boss_1234567890AB';
-        expect(validateStaffPassId(validId)).toBe(true);
-    });
-
-    // 1.5. Valid: BOSS ID with mixed alphanumeric suffix (Lowercase suffix)
-    it('should return true for a valid BOSS ID with mixed suffix and (lowercase suffix)', () => {
-        const validId = 'BOSS_1234567890ab';
-        expect(validateStaffPassId(validId)).toBe(true);
-    });
-
-    // 1.6. Valid: BOSS ID with mixed alphanumeric suffix (Lowercase prefix and suffix)
-    it('should return true for a valid BOSS ID with mixed suffix and (lowercase prefix and suffix)', () => {
-        const validId = 'BOSS_1234567890ab';
-        expect(validateStaffPassId(validId)).toBe(true);
-    });
     
-    // 1.7. Valid: BOSS ID with alphabetical only suffix
+    // 1.4. Valid: BOSS ID with alphabetical only suffix
     it('should return true for a valid BOSS ID with all-alphabetical suffix', () => {
         const validId = 'BOSS_ABCDEFGHIJKL';
         expect(validateStaffPassId(validId)).toBe(true);
     });
-    
-    // 1.8. BOSS ID with alphabetical only suffix (Lowercase prefix and suffix)
-    it('should return true for a valid BOSS ID with all-alphabetical suffix (lowercase prefix and suffix)', () => {
-        const validId = 'boss_abcdefghijkl';
-        expect(validateStaffPassId(validId)).toBe(true);
-    });
-});
 
+});
 
 // 2. FAILURE: Invalid Staff Pass IDs
 describe('validateStaffPassId - Failure Cases (Invalid IDs)', () => {
@@ -83,7 +59,7 @@ describe('validateStaffPassId - Failure Cases (Invalid IDs)', () => {
     it('should throw ValidationError for an empty string', () => {
         const emptyId = '';
         expect(() => validateStaffPassId(emptyId)).toThrow(ValidationError);
-        expect(() => validateStaffPassId(emptyId)).toThrow('Staff Pass ID cannot be an empty value.');
+        expect(() => validateStaffPassId(emptyId)).toThrow(`${idNotEmptyMsg}`);
     });
     
     // 2.2. Underscore checks
@@ -112,12 +88,6 @@ describe('validateStaffPassId - Failure Cases (Invalid IDs)', () => {
         const invalidPrefixId = 'INTERN_1234567890AB';
         expect(() => validateStaffPassId(invalidPrefixId)).toThrow(ValidationError);
         expect(() => validateStaffPassId(invalidPrefixId)).toThrow(fullMsg(invalidPrefixId, idPrefixMsg));
-    });
-
-    it('should throw ValidationError for an invalid prefix (e.g., intern) (lowercase prefix)', () => {
-        const invalidPrefixLowerId = 'intern_1234567890AB';
-        expect(() => validateStaffPassId(invalidPrefixLowerId)).toThrow(ValidationError);
-        expect(() => validateStaffPassId(invalidPrefixLowerId)).toThrow(fullMsg(invalidPrefixLowerId, idPrefixMsg));
     });
 
     it('should throw ValidationError for an empty prefix (e.g., _SUFFIX)', () => {

@@ -28,9 +28,9 @@ export const validateStaffPassId = (staffPassId: string): boolean => {
     // Check whether Staff Pass ID components are valid.
     else if (idParts.length == 2) {
         const allowedPrefixes = ['BOSS', 'MANAGER', 'STAFF'];
-        const allowedSuffixRegex = /^[a-zA-Z0-9]{12}$/;
+        const allowedSuffixRegex = /^[A-Z0-9]{12}$/;
         const allNumericSuffixRegex = /^\d{12}$/;
-        const specialCharRegex = /[^a-zA-Z0-9]+/
+        const specialCharRegex = /[^A-Z0-9]+/
         const staffPassIdPrefix = idParts[0].toUpperCase();
         const staffPassIdSuffix = idParts[1].toUpperCase();
 
