@@ -11,9 +11,6 @@ export class StaffService {
     constructor(private storage: StorageService) {}
     lookup(staffPassId: string): string {
         const staff = this.storage.findStaffByPassId(staffPassId);
-        console.log("Staff found:")
-        console.log(`${staff}`)
-        
         if (!staff) {
             throw new StaffPassNotFoundError(staffPassId);
         }

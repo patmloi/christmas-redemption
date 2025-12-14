@@ -11,11 +11,7 @@ export class StaffController {
     try {
         // Staff Pass ID
         let { staffPassId } = req.params;
-        console.log('Original staffPassId:', staffPassId)
-        
-        // Convert Staff Pass ID to uppercase string
         staffPassId = String(staffPassId).toUpperCase().trim();
-        console.log('Extracted staffPassId:', staffPassId);
 
         // Validate Staff Pass ID before retrieval
         if (validateStaffPassId(staffPassId)){
