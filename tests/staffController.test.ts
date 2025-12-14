@@ -6,7 +6,7 @@ import { Request, Response } from 'express'; // Import types for mocking
 
 // Mocks
 
-// StaffPAssIdValidator
+// StaffPassIdValidator
 jest.mock('../src/validators/staffPassIdValidator', () => ({
     validateStaffPassId: jest.fn(),
 }));
@@ -165,7 +165,7 @@ describe('StaffController.lookup', () => {
         });
     });
 
-    // 2.2. String does not contain underscore (Test sthat )
+    // 2.2. String does not contain underscore (Tests that staffController works together with staffPassIdValidator)
     it('should return 400 when validation fails (ValidationError)', () => {
         const staffIdInput = 'BOSS1234567890AB';
         const errorMessage = 'Staff Pass ID value does not follow expected Staff Pass ID format: Staff Pass ID does not contain an underscore (_). Staff Pass ID value provided: BOSS1234567890AB';
@@ -196,6 +196,7 @@ describe('StaffController.lookup', () => {
         });
     });
 
+    // 2.3. Staff ID not found by lookup
     it('should return 404 when the staff ID is not found (StaffPassNotFoundError)', () => {
         const staffIdInput = 'BOSS_1234567890CD';
         const errorMessage = 'Staff pass ID not found: BOSS_1234567890CD';
@@ -224,7 +225,7 @@ describe('StaffController.lookup', () => {
         });
     });
 
-    // --- 4. FAILURE PATH TESTS (Server Errors: 5xx) ---
+    // 2.4. Unexpected error: Database connection error 
 
     it('should return 500 when an unexpected error occurs during lookup', () => {
         const staffIdInput = 'BOSS_1234567890AB';
@@ -243,8 +244,10 @@ describe('StaffController.lookup', () => {
         // Assert
         // 1. Check that the service was called
         expect(mockStaffService.lookup).toHaveBeenCalled();
+
         // 2. Check console.error was called for debugging
         expect(console.error).toHaveBeenCalledWith('Lookup error:', serviceError);
+
         // 3. Check the correct 500 response structure
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({
