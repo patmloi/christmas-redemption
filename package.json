@@ -4,10 +4,12 @@
   "description": "",
   "main": "dist/index.js",
   "scripts": {
-    "build": "npx tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch 'src/**/*.ts' --exec 'ts-node' src/server.ts",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint 'src/**/*.ts'"
   },
   "repository": {
     "type": "git",
@@ -21,13 +23,19 @@
   },
   "homepage": "https://github.com/c99rahul/ts-node-express#readme",
   "dependencies": {
+    "better-sqlite3": "^12.5.0",
+    "csv-parser": "^3.2.0",
     "dotenv": "^16.4.7",
     "express": "^4.21.2"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^7.6.13",
     "@types/express": "^5.0.0",
+    "@types/jest": "^30.0.0",
     "@types/node": "^22.13.10",
+    "jest": "^30.2.0",
     "nodemon": "^3.1.9",
+    "ts-jest": "^29.4.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.8.2"
   }
