@@ -21,7 +21,7 @@ describe('StaffService.lookup', () => {
 
         jest.clearAllMocks();
         
-        // Instantiate the service with the mock dependency
+        // Initialise service with dependencies
         staffService = new StaffService(mockStorageService as unknown as StorageService);
         jest.spyOn(console, 'log').mockImplementation(() => {});
     });
@@ -63,18 +63,15 @@ describe('StaffService.lookup', () => {
         // Initialise mock return value
         mockStorageService.findStaffByPassId.mockReturnValue(null);
 
-        // Initialise test
-        const result = staffService.lookup(staffId);
-
         // Assert
-        // 1. Check if the storage method was called correctly
-        expect(mockStorageService.findStaffByPassId).toHaveBeenCalledWith(staffId);
-        
-        // 2. Check the returned error
+        // 1. Check the returned error
          expect(() => staffService.lookup(staffId)).toThrow(StaffPassNotFoundError);
         
-        // 3. Check that the correct error message is thrown
+        // 2. Check that the correct error message is thrown
         const expectedErrorMessage = `Staff pass ID not found: ${staffId}`;
         expect(() => staffService.lookup(staffId)).toThrow(expectedErrorMessage);
+
+        // 3. Check if the storage method was called correctly: Check error message before checking whether it was called
+        expect(mockStorageService.findStaffByPassId).toHaveBeenCalledWith(staffId);
     });
 });
