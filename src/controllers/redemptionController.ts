@@ -1,9 +1,8 @@
 import { Request, Response } from 'express';
 import { StaffService } from '../services/staff.service';
 import { RedemptionService } from '../services/redemption.service';
-import { ValidationError } from '../errors/validationError'
-import { TeamNameNotFoundError } from '../errors/teamNameNotFoundError';
-import { AlreadyRedeemedError } from '../errors/alreadyRedeemedError'; 
+import { ValidationError, TeamNameNotFoundError, AlreadyRedeemedError } from '../errors/errors';
+
 
 
 export class RedemptionController {
