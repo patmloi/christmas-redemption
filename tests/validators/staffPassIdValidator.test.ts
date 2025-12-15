@@ -11,8 +11,6 @@ import { ValidationError } from '../../src/errors/validationError'; // Import th
     const idTwoUnderscoresMsg = 'Staff Pass ID contains 2 underscores, expected exactly 1.';
     const idPrefixMsg = 'Staff Pass ID does not start with any of the following accepted values (BOSS, MANAGER, STAFF).';
     const idSuffixSpecialCharMsg = 'contains special characters.';
-    const idSuffixLengthMsg = 'length is not 12 characters.';
-    const idSuffixAllNumericMsg = 'suffix only contains numeric characters.';
 
     let fullMsg = (staffPassId: any, errorDetails: string) => { 
         return `${idUnexpectedMsg} ${errorDetails} ${idProvidedMsg} ${staffPassId}`
@@ -98,7 +96,7 @@ describe('validateStaffPassId - Failure Cases (Invalid IDs)', () => {
 
 
     // 2.4. Suffix checks: Suffix special character checks 
-    
+
     it('should throw ValidationError when suffix contains a special character (hyphen)', () => {
         const specialCharId = 'STAFF_12345678901-';
         expect(() => validateStaffPassId(specialCharId)).toThrow(ValidationError);
