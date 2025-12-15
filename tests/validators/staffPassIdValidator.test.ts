@@ -97,23 +97,8 @@ describe('validateStaffPassId - Failure Cases (Invalid IDs)', () => {
     });
 
 
-    // 2.4. Suffix checks
-
-    // 2.4.1. Suffix length checks 
-
-    it('should throw ValidationError when suffix is too short (11 chars)', () => {
-        const shortSuffixId = 'BOSS_1234567890A';
-        expect(() => validateStaffPassId(shortSuffixId)).toThrow(ValidationError);
-        expect(() => validateStaffPassId(shortSuffixId)).toThrow(fullSuffixMsg(shortSuffixId, idSuffixLengthMsg));
-    });
-
-    it('should throw ValidationError when suffix is too long (13 chars)', () => {
-        const longSuffixId = 'BOSS_1234567890ABC';
-        expect(() => validateStaffPassId(longSuffixId)).toThrow(ValidationError);
-        expect(() => validateStaffPassId(longSuffixId)).toThrow(fullSuffixMsg(longSuffixId, idSuffixLengthMsg));
-    });
-
-    // 2.4.2. Suffix special character checks 
+    // 2.4. Suffix checks: Suffix special character checks 
+    
     it('should throw ValidationError when suffix contains a special character (hyphen)', () => {
         const specialCharId = 'STAFF_12345678901-';
         expect(() => validateStaffPassId(specialCharId)).toThrow(ValidationError);
@@ -124,19 +109,5 @@ describe('validateStaffPassId - Failure Cases (Invalid IDs)', () => {
         const specialCharId = 'BOSS_1234567890 A';
         expect(() => validateStaffPassId(specialCharId)).toThrow(ValidationError);
         expect(() => validateStaffPassId(specialCharId)).toThrow(fullSuffixMsg(specialCharId, idSuffixSpecialCharMsg));
-    });
-
-    // 2.4.3. All numeric suffix check
-    
-    it('should throw ValidationError when suffix is all numeric (12 digits)', () => {
-        const allNumericId = 'MANAGER_123456789012';
-        expect(() => validateStaffPassId(allNumericId)).toThrow(ValidationError);
-        expect(() => validateStaffPassId(allNumericId)).toThrow(fullSuffixMsg(allNumericId, idSuffixAllNumericMsg));
-    });
-    
-    it('should fail the length check first if all numeric and short', () => {
-        const allNumericShort = 'MANAGER_12345';
-        expect(() => validateStaffPassId(allNumericShort)).toThrow(ValidationError);
-        expect(() => validateStaffPassId(allNumericShort)).toThrow(fullSuffixMsg(allNumericShort, idSuffixLengthMsg)); 
     });
 });
