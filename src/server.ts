@@ -7,7 +7,7 @@ import { RedemptionService } from './services/redemption.service';
 import { RedemptionController } from './controllers/redemptionController';
 import { StaffController } from './controllers/staffController';
 import { RedemptionRoutes } from './routes/redemptionRoutes';
-import StaffRoutes from './routes/staffRoutes';
+import { StaffRoutes } from './routes/staffRoutes';
 import config from './config/config';
 
 async function startServer() {
