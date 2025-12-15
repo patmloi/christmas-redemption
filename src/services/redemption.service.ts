@@ -1,26 +1,20 @@
 import { StorageService } from './storage.service';
 import { Redemption } from '../models/redemption.model';
-import { EligibleResult, NotEligibleResult, EligibilityResult } from '../models/redemptionEligibility.model';
+import { ValidationError, TeamNameNotFoundError, AlreadyRedeemedError } from '../errors/errors';
 
 export class RedemptionService {
   constructor(private storage: StorageService) {}
 
-  checkEligibility(teamName: string): EligibilityResult {
-  const redemption: Redemption | null = this.storage.findRedemption(teamName);
+  checkEligibility(teamName: string): boolean {
+    const redemption: Redemption | null = this.storage.findRedemption(teamName);
 
-  // Not eligible: Record exists
-  if (redemption !== null) {
-    return {
-      eligible: false, 
-      redeemedByStaffPassId: redemption.staff_pass_id,
-    } as NotEligibleResult;
+    // Not eligible: Record exists
+    if (redemption !== null) {
+      throw new AlreadyRedeemedError(teamName, redemption.staff_pass_id)
+    }
+
+    else {
+      return true;
+    }
   }
-
-  // Eligible: Record does not exist
-  return {
-    eligible: true, 
-  } as EligibleResult;
-}
-
-  
 }
