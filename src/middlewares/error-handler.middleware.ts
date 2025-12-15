@@ -15,6 +15,7 @@ export const errorHandler = (
   res: Response, 
   next: NextFunction // required even if not used
 ) => {
+
   // Check if the error is one of our custom AppErrors
   if (isAppError(err)) {
     const { statusCode, name, message } = err;
@@ -28,6 +29,6 @@ export const errorHandler = (
   console.error('An unhandled server error occurred:', err);
   return res.status(500).json({ 
     error: 'Internal Server Error',
-    message: 'An unexpected error occurred.' 
+    details: 'An unexpected error occurred.' 
   });
 };
