@@ -1,23 +1,22 @@
 import { validateStaffPassId } from '../../src/validators/staffPassIdValidator';
-import { ValidationError } from '../../src/errors/validationError'; // Import the custom error class
+import { ValidationError } from '../../src/errors/errors'; // Import the custom error class
 
 // Helper variables for common parts of error messages
     const idUnexpectedMsg = 'Staff Pass ID value does not follow expected Staff Pass ID format:';
-    const idUnexpectedSuffixMsg = 'Staff Pass ID does not end with a 12-character alphanumeric string,';
 
     const idProvidedMsg = 'Staff Pass ID value provided:';
     const idNotEmptyMsg = 'Staff Pass ID cannot be an empty value.'
     const idNoUnderscoreMsg = 'Staff Pass ID does not contain an underscore (_).';
     const idTwoUnderscoresMsg = 'Staff Pass ID contains 2 underscores, expected exactly 1.';
     const idPrefixMsg = 'Staff Pass ID does not start with any of the following accepted values (BOSS, MANAGER, STAFF).';
-    const idSuffixSpecialCharMsg = 'contains special characters.';
+    const idSuffixSpecialCharMsg = 'Contains special characters.';
 
     let fullMsg = (staffPassId: any, errorDetails: string) => { 
         return `${idUnexpectedMsg} ${errorDetails} ${idProvidedMsg} ${staffPassId}`
     }
 
     let fullSuffixMsg = (staffPassId: any, errorDetails: string) => { 
-        return `${idUnexpectedMsg} ${idUnexpectedSuffixMsg} ${errorDetails} ${idProvidedMsg} ${staffPassId}`
+        return `${idUnexpectedMsg} ${errorDetails} ${idProvidedMsg} ${staffPassId}`
     }
 
 // 1. SUCCESS: Valid Staff Pass IDs
