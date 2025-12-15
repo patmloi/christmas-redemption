@@ -23,7 +23,7 @@ async function startServer() {
     // 1.1.2. Staff table
     console.log('Loading CSV data...');
     const csvLoader = new CsvLoaderService(db);
-    const csvFilePath = './data/staff-id-to-team-mapping.csv';
+    const csvFilePath = './data/staff-id-to-team-mapping-long.csv';
     await csvLoader.loadStaffData(csvFilePath);
 
     // 1.2. Services

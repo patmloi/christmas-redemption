@@ -1,13 +1,11 @@
-import { Request, Response } from 'express';
+import { Request, Response, NextFunction } from 'express';
 import { StaffService } from '../services/staff.service';
-import { StaffPassNotFoundError } from '../errors/staffPassNotFoundError';
 import { validateStaffPassId } from '../validators/staffPassIdValidator';
-import { ValidationError } from '../errors/validationError';
 
 export class StaffController {
   constructor(private staffService: StaffService) {}
 
-  lookup = (req: Request, res: Response): void => {
+  lookup = (req: Request, res: Response, next: NextFunction): void => {
     try {
         // Staff Pass ID
         let { staffPassId } = req.params;
@@ -23,29 +21,7 @@ export class StaffController {
         }
 
     } catch (error) {
-    
-    // Validation error
-    if (error instanceof ValidationError) {
-        res.status(400).json({ 
-            error: 'Validation Failed', 
-            details: error.message 
-        });  
-    }
-
-    // Staff pass not found
-    else if (error instanceof StaffPassNotFoundError) {
-        res.status(404).json({ 
-            error: error.message 
-        });
-      } 
-    
-    // Lookup error
-    else {
-        console.error('Lookup error:', error);
-        res.status(500).json({ 
-          error: 'Internal server error' 
-        });
-      }
+      next(error);
     }
   };
 }
