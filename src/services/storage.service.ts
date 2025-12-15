@@ -7,10 +7,20 @@ export class StorageService {
 
   // Lookup staff by staff_pass_id
   findStaffByPassId(staffPassId: string): Staff | null {
-    const stmt = this.db.prepare(
+    const stmt = this.db.prepare<string, Staff>(
       'SELECT * FROM staff WHERE staff_pass_id = ?'
     );
-    return stmt.get(staffPassId) as Staff | undefined || null;
+    const staff = stmt.get(staffPassId)
+    return staff === undefined ? null : staff;
+  }
+
+  // Get all team name instances
+  findTeamNameInstances(teamName: string) {
+    const stmt = this.db.prepare<string>(
+      'SELECT COUNT(*) AS count FROM staff WHERE team_name = ?;'
+    );
+    const teamNameInstances = stmt.get(teamName) as { count: number } | undefined;
+    return teamNameInstances ? teamNameInstances.count : 0;
   }
 
   // Check if team has already redeemed

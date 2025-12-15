@@ -3,6 +3,6 @@ import { RedemptionController } from '../controllers/redemptionController';
 
 export const RedemptionRoutes = (controller: RedemptionController) => {
     const router = Router();
-    router.get('/eligibility', controller.checkEligibility);
+    router.get('/eligibility/:teamName', controller.checkEligibility);
     return router;
 };

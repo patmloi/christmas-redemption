@@ -35,7 +35,7 @@ async function startServer() {
     // 1.3. Controllers
     console.log('Initializing controllers...');
     const staffController = new StaffController(staffService);
-    const redemptionController = new RedemptionController(redemptionService);
+    const redemptionController = new RedemptionController(staffService, redemptionService);
 
     // 2. Set up routes
     app.use('/api/staff', StaffRoutes(staffController));
