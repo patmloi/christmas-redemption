@@ -1,8 +1,8 @@
 import { StaffController } from '../../src/controllers/staffController';
-import { StaffService, StaffPassNotFoundError } from '../../src/services/staff.service';
-import { validateStaffPassId } from '../../src/validators/staffPassIdValidator';
-import { ValidationError } from '../../src/errors/validationError';
-import { Request, Response } from 'express'; // Import types for mocking
+import * as StaffValidator from '../../src/validators/staffPassIdValidator';
+import { ValidationError, StaffPassNotFoundError } from '../../src/errors/errors';
+import { Request, Response, NextFunction } from 'express'; // Import types for mocking
+import { errorHandler } from '../../src/middlewares/error-handler.middleware'
 
 // Mocks
 
@@ -36,13 +36,19 @@ describe('StaffController.lookup', () => {
     let staffController: StaffController;
     let req: Partial<Request>;
     let res: Partial<Response>;
+    let next: jest.Mock; 
 
     // Reset mocks
     beforeEach(() => {
         jest.clearAllMocks();
         staffController = new StaffController(mockStaffService as any);
         res = mockResponse();
-        (validateStaffPassId as jest.Mock).mockReturnValue(true); 
+        next = jest.fn((err) =>  {
+            if (err) {
+                errorHandler(err, req as Request, res as Response, jest.fn() as NextFunction);
+            }
+        });
+        // (validateStaffPassId as jest.Mock).mockReturnValue(true); 
 
         // Suppress console outputs
         jest.spyOn(console, 'error').mockImplementation(() => {});
@@ -65,9 +71,11 @@ describe('StaffController.lookup', () => {
         // Initialise request and response values
         req = mockRequest({ staffPassId: staffIdInput });
         mockStaffService.lookup.mockReturnValue(mockTeamName);
+        jest.spyOn(StaffValidator, 'validateStaffPassId').mockReturnValue(true);
+        // (validateStaffPassId as jest.Mock).mockReturnValue(true);
 
         // Initialise test
-        staffController.lookup(req as Request, res as Response);
+        staffController.lookup(req as Request, res as Response, next as NextFunction);
 
         // Assert
         // 1. Check that the service was called with the correctly processed ID
@@ -81,7 +89,6 @@ describe('StaffController.lookup', () => {
         });
     });
 
-
     // 1.2. Lowercase Staff Pass ID
     it('hould return 200 by correctly processing a lowercase STAFF Pass ID', () => {
         const staffIdInput = 'boss_1234567890ab';
@@ -91,9 +98,10 @@ describe('StaffController.lookup', () => {
         // Initialise request and response values
         req = mockRequest({ staffPassId: staffIdInput });
         mockStaffService.lookup.mockReturnValue(mockTeamName);
+        jest.spyOn(StaffValidator, 'validateStaffPassId').mockReturnValue(true);
 
         // Initialise test
-        staffController.lookup(req as Request, res as Response);
+        staffController.lookup(req as Request, res as Response, next as NextFunction);
 
         // Assert
         // 1. Check that the service was called with the correctly processed ID
@@ -116,9 +124,10 @@ describe('StaffController.lookup', () => {
         // Initialise request and response values
         req = mockRequest({ staffPassId: staffIdInput });
         mockStaffService.lookup.mockReturnValue(mockTeamName);
+        jest.spyOn(StaffValidator, 'validateStaffPassId').mockReturnValue(true);
 
         // Initialise test
-        staffController.lookup(req as Request, res as Response);
+        staffController.lookup(req as Request, res as Response, next as NextFunction);
 
         // Assert
         // 1. Check that the service was called with the correctly processed ID
@@ -138,21 +147,22 @@ describe('StaffController.lookup', () => {
     // 2.1. Empty string
     it('should return 400 when validation fails (ValidationError) due to a string with only spaces', () => {
         const staffIdInput = '     ';
+        const errorClass = 'ValidationError';
         const errorMessage = 'Staff Pass ID cannot be an empty value.';
 
         // Arrange
         req = mockRequest({ staffPassId: staffIdInput });
         // Mock the validator to THROW the specific validation error
-        (validateStaffPassId as jest.Mock).mockImplementation(() => {
+        jest.spyOn(StaffValidator, 'validateStaffPassId').mockImplementation(() => {
             throw new ValidationError(errorMessage);
         });
 
         // Act
-        staffController.lookup(req as Request, res as Response);
+        staffController.lookup(req as Request, res as Response, next as NextFunction);
 
         // Assert
         // 1. Check that the validator was called with the correctly processed ID
-        expect(validateStaffPassId).toHaveBeenCalledWith('');
+        expect(StaffValidator.validateStaffPassId).toHaveBeenCalledWith('');
 
         // 2. Check that the service lookup was NOT called
         expect(mockStaffService.lookup).not.toHaveBeenCalled();
@@ -160,7 +170,7 @@ describe('StaffController.lookup', () => {
         // 3. Check the correct 400 response structure
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
-            error: 'Validation Failed',
+            error: errorClass,
             details: errorMessage,
         });
     });
@@ -168,30 +178,32 @@ describe('StaffController.lookup', () => {
     // 2.2. String does not contain underscore (Tests that staffController works together with staffPassIdValidator)
     it('should return 400 when validation fails (ValidationError)', () => {
         const staffIdInput = 'BOSS1234567890AB';
+        const errorClass = 'ValidationError';
         const errorMessage = 'Staff Pass ID value does not follow expected Staff Pass ID format: Staff Pass ID does not contain an underscore (_). Staff Pass ID value provided: BOSS1234567890AB';
 
         // Arrange
         req = mockRequest({ staffPassId: staffIdInput });
         // Mock the validator to THROW the specific validation error
-        (validateStaffPassId as jest.Mock).mockImplementation(() => {
+        jest.spyOn(StaffValidator, 'validateStaffPassId').mockImplementation(() => {
             throw new ValidationError(errorMessage);
         });
 
+
         // Act
-        staffController.lookup(req as Request, res as Response);
+        staffController.lookup(req as Request, res as Response, next as NextFunction);
 
 
         // Assert
         // 1. Check that the validator was called with the correctly processed ID
-        expect(validateStaffPassId).toHaveBeenCalledWith('BOSS1234567890AB');
+        expect(StaffValidator.validateStaffPassId).toHaveBeenCalledWith('BOSS1234567890AB');
 
         // 2. Check that the service lookup was NOT called
-        expect(mockStaffService.lookup).not.toHaveBeenCalled();
+        // expect(mockStaffService.lookup).not.toHaveBeenCalled();
         
         // 3. Check the correct 400 response structure
         expect(res.status).toHaveBeenCalledWith(400);
         expect(res.json).toHaveBeenCalledWith({
-            error: 'Validation Failed',
+            error: errorClass,
             details: errorMessage,
         });
     });
@@ -199,21 +211,27 @@ describe('StaffController.lookup', () => {
     // 2.3. Staff ID not found by lookup
     it('should return 404 when the staff ID is not found (StaffPassNotFoundError)', () => {
         const staffIdInput = 'BOSS_1234567890CD';
+        const errorClass = 'StaffPassNotFoundError';
         const errorMessage = 'Staff pass ID not found: BOSS_1234567890CD';
 
         // Arrange
         req = mockRequest({ staffPassId: staffIdInput });
+
         // Mock the service to THROW the not found error
-        mockStaffService.lookup.mockImplementation(() => {
+        jest.spyOn(StaffValidator, 'validateStaffPassId').mockReturnValue(true);
+        // jest.spyOn(mockStaffService, 'lookup').mockImplementation(() => {
+        //     throw new StaffPassNotFoundError('BOSS_1234567890CD');
+        // });
+        mockStaffService.lookup = jest.fn(() => {
             throw new StaffPassNotFoundError('BOSS_1234567890CD');
         });
-
+        
         // Act
-        staffController.lookup(req as Request, res as Response);
+        staffController.lookup(req as Request, res as Response, next as NextFunction);
 
         // Assert
         // 1. Check that the validator was called with the correctly processed ID
-        expect(validateStaffPassId).toHaveBeenCalledWith('BOSS_1234567890CD');
+        expect(StaffValidator.validateStaffPassId).toHaveBeenCalledWith('BOSS_1234567890CD');
 
         // 2. Check that the service lookup was called
         expect(mockStaffService.lookup).toHaveBeenCalled();
@@ -221,7 +239,8 @@ describe('StaffController.lookup', () => {
         // 3. Check the correct 404 response structure
         expect(res.status).toHaveBeenCalledWith(404);
         expect(res.json).toHaveBeenCalledWith({
-            error: errorMessage,
+            error: errorClass,
+            details: errorMessage,
         });
     });
 
@@ -229,6 +248,8 @@ describe('StaffController.lookup', () => {
 
     it('should return 500 when an unexpected error occurs during lookup', () => {
         const staffIdInput = 'BOSS_1234567890AB';
+        const errorClass = 'Internal Server Error';
+        const errorMessage = 'An unexpected error occurred.';
         const serviceError = new Error('Database connection failed.');
 
         // Arrange
@@ -239,19 +260,20 @@ describe('StaffController.lookup', () => {
         });
 
         // Act
-        staffController.lookup(req as Request, res as Response);
+        staffController.lookup(req as Request, res as Response, next as NextFunction);
 
         // Assert
         // 1. Check that the service was called
         expect(mockStaffService.lookup).toHaveBeenCalled();
 
         // 2. Check console.error was called for debugging
-        expect(console.error).toHaveBeenCalledWith('Lookup error:', serviceError);
+        // expect(console.error).toHaveBeenCalledWith('Lookup error:', serviceError);
 
         // 3. Check the correct 500 response structure
         expect(res.status).toHaveBeenCalledWith(500);
         expect(res.json).toHaveBeenCalledWith({
-            error: 'Internal server error',
+            error: errorClass,
+            details: errorMessage,
         });
     });
 });

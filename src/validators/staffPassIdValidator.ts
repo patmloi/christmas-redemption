@@ -1,4 +1,4 @@
-import { ValidationError } from '../errors/validationError'
+import { ValidationError } from '../errors/errors'
 
 export const validateStaffPassId = (staffPassId: string): boolean => {
 
@@ -43,7 +43,7 @@ export const validateStaffPassId = (staffPassId: string): boolean => {
 
             // Check if suffix contains non-alphanumeric characters.
             if (specialCharRegex.test(staffPassIdSuffix)) {
-                throw new ValidationError(`${idUnexpectedMsg}, contains special characters. ${idProvidedMsg}`)
+                throw new ValidationError(`${idUnexpectedMsg} Contains special characters. ${idProvidedMsg}`)
             }
 
             else {

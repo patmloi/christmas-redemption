@@ -1,11 +1,5 @@
 import { StorageService } from './storage.service';
-
-export class StaffPassNotFoundError extends Error {
-  constructor(staffPassId: string) {
-    super(`Staff pass ID not found: ${staffPassId}`);
-    this.name = 'StaffPassNotFoundError';
-  }
-}
+import { StaffPassNotFoundError } from '../errors/errors'; 
 
 export class StaffService {
     constructor(private storage: StorageService) {}

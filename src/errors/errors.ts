@@ -26,20 +26,20 @@ export class ValidationError extends AppError {
 export class AlreadyRedeemedError extends AppError {
     constructor(teamName: string, staffPassId: string) {
         super(403, 'AlreadyRedeemedError', `Team has already redeemed: ${staffPassId} has redeemed on behalf of ${teamName}.`);
-        Object.setPrototypeOf(this, ValidationError.prototype);
+        Object.setPrototypeOf(this, AlreadyRedeemedError.prototype);
     }
 }
 
 export class StaffPassNotFoundError extends AppError {
     constructor(staffPassId: string) {
         super(404, 'StaffPassNotFoundError', `Staff pass ID not found: ${staffPassId}`);
-        Object.setPrototypeOf(this, ValidationError.prototype);
+        Object.setPrototypeOf(this, StaffPassNotFoundError.prototype);
     }
 }
 
 export class TeamNameNotFoundError extends AppError {
     constructor(teamName: string) {
         super(404, 'TeamNameNotFoundError', `Team name not found: ${teamName}`);
-        Object.setPrototypeOf(this, ValidationError.prototype);
+        Object.setPrototypeOf(this, TeamNameNotFoundError.prototype);
     }
 }
