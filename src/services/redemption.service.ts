@@ -1,19 +1,7 @@
 import { StorageService } from './storage.service';
 import { Redemption } from '../models/redemption.model';
-
-export class StaffPassNotFoundError extends Error {
-  constructor(staffPassId: string) {
-    super(`Staff pass ID not found: ${staffPassId}`);
-    this.name = 'StaffPassNotFoundError';
-  }
-}
-
-export class AlreadyRedeemedError extends Error {
-  constructor(teamName: string) {
-    super(`Team has already redeemed: ${teamName}`);
-    this.name = 'AlreadyRedeemedError';
-  }
-}
+import { AlreadyRedeemedError } from '../errors/alreadyRedeemedError';
+import { StaffPassNotFoundError } from '../errors/staffPassNotFoundError';
 
 export class RedemptionService {
   constructor(private storage: StorageService) {}

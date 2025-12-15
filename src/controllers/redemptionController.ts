@@ -1,22 +1,10 @@
 import { Request, Response } from 'express';
-import { RedemptionService, StaffPassNotFoundError, AlreadyRedeemedError } from '../services/redemption.service';
+import { RedemptionService} from '../services/redemption.service';
+import { AlreadyRedeemedError } from '../errors/alreadyRedeemedError';
+import { StaffPassNotFoundError } from '../errors/staffPassNotFoundError';
 
 export class RedemptionController {
   constructor(private redemptionService: RedemptionService) {}
-
-  lookup = (req: Request, res: Response): void => {
-    try {
-      const { staffPassId } = req.params;
-      const teamName = this.redemptionService.lookup(staffPassId);
-      res.json({ staffPassId, teamName });
-    } catch (error) {
-      if (error instanceof StaffPassNotFoundError) {
-        res.status(404).json({ error: error.message });
-      } else {
-        res.status(500).json({ error: 'Internal server error' });
-      }
-    }
-  };
 
   checkEligibility = (req: Request, res: Response): void => {
     try {

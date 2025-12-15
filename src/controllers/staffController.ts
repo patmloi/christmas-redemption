@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { StaffService } from '../services/staff.service';
-import { StaffPassNotFoundError } from '../services/staff.service';
+import { StaffPassNotFoundError } from '../errors/staffPassNotFoundError';
 import { validateStaffPassId } from '../validators/staffPassIdValidator';
 import { ValidationError } from '../errors/validationError';
 
