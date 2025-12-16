@@ -20,9 +20,9 @@ export const errorHandler = (
   if (isAppError(err)) {
     const { statusCode, name, message } = err;
     return res.status(statusCode).json({
-            error: name,
-            details: message 
-        });
+        error: name,
+        details: message 
+    });
   }
 
   // Handle unexpected errors (e.g., errors from external libraries, database connection issues, etc.)
