@@ -1,18 +1,25 @@
--- Staff table (Provided)
+-- Reference Table: teams
+CREATE TABLE IF NOT EXISTS teams (
+    team_id BIGINT PRIMARY KEY,
+    team_name TEXT UNIQUE NOT NULL
+);
 
+-- Staff Mapping Table: staff
+-- Staff Pass ID creation date is not necessary for redemption logic 
 CREATE TABLE IF NOT EXISTS staff (
-    staff_pass_id TEXT PRIMARY KEY UNIQUE NOT NULL,
-    team_name TEXT NOT NULL,
-    created_at BIGINT NOT NULL
+    staff_id INTEGER PRIMARY KEY,
+    staff_pass_id TEXT UNIQUE NOT NULL,
+    team_id BIGINT NOT NULL,
+    created_at BIGINT, 
+    FOREIGN KEY (team_id) REFERENCES teams(team_id)
 );
 
--- Redemptions table (New)
+-- Transaction Table: redemptions
 CREATE TABLE IF NOT EXISTS redemptions (
-    team_name TEXT PRIMARY KEY UNIQUE NOT NULL,
-    staff_pass_id TEXT NOT NULL,
-    redeemed_at BIGINT NOT NULL
+    id BIGINT PRIMARY KEY,
+    team_id BIGINT UNIQUE NOT NULL, 
+    redeemed_by_staff_id BIGINT NOT NULL, 
+    redeemed_at BIGINT NOT NULL,
+    FOREIGN KEY (team_id) REFERENCES teams(team_id),
+    FOREIGN KEY (redeemed_by_staff_id) REFERENCES staff(staff_id)
 );
-
--- Index for fast lookups
-CREATE INDEX IF NOT EXISTS idx_staff_pass_id ON staff(staff_pass_id);
-CREATE INDEX IF NOT EXISTS idx_team_name ON redemptions(team_name);
