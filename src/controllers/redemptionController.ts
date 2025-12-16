@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express';
 import { StaffService } from '../services/staff.service';
 import { RedemptionService } from '../services/redemption.service';
+import { validateStaffPassId } from '../validators/staffPassIdValidator';
 import { ValidationError, TeamNameNotFoundError, AlreadyRedeemedError } from '../errors/errors';
 
 
@@ -23,42 +24,23 @@ export class RedemptionController {
       }
 
       // Check if team name in redemptions
-      const eligible = this.redemptionService.checkEligibility(teamName);
-
-      if (eligible) {
-        res.json({ 
-          teamName: teamName, 
-          eligible: true });
-      } 
-
+      const eligibleRes = this.redemptionService.checkEligibility(teamName);
+      res.json(eligibleRes)
     } catch (error) {
       next(error)
+    }
+  };
 
-        // // Validation error
-        // if (error instanceof ValidationError) {
-        //     res.status(400).json({ 
-        //         error: 'Validation Failed', 
-        //         details: error.message 
-        //     });
-        // }
-
-        // // Already redeemed error
-        // else if (error instanceof AlreadyRedeemedError) {
-        //   res.status(403).json({ 
-        //     message: error.message
-        //   });
-        // }
-
-        // // Team not found error 
-        // else if (error instanceof TeamNameNotFoundError) {
-        //   res.status(404).json({ 
-        //     message: error.message
-        //   });
-        // }
-
-        // else {
-        //   res.status(500).json({ error: 'Internal server error' });
-        // }
+  redeem = (req: Request, res: Response, next: NextFunction): void => {
+    try { 
+      let { staffPassId } = req.params;
+      staffPassId = String(staffPassId).toUpperCase().trim();
+      if (validateStaffPassId(staffPassId)){
+        const redeemRes = this.redemptionService.redeem(staffPassId)
+        res.json(redeemRes)
+      }
+    } catch (error) {
+      next(error)
     }
   };
 }

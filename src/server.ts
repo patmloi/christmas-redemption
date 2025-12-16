@@ -30,7 +30,7 @@ async function startServer() {
     console.log('Initializing services...');
     const storageService = new StorageService(db);
     const staffService = new StaffService(storageService);
-    const redemptionService = new RedemptionService(storageService);
+    const redemptionService = new RedemptionService(storageService, staffService);
 
     // 1.3. Controllers
     console.log('Initializing controllers...');

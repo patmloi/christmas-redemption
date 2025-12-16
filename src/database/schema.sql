@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS staff (
 CREATE TABLE IF NOT EXISTS redemptions (
     redemption_id INTEGER PRIMARY KEY,
     team_id INTEGER UNIQUE NOT NULL, 
-    staff_id INTEGER UNIQUE NOT NULL, 
+    staff_id INTEGER NOT NULL, 
     redeemed_at BIGINT NOT NULL,
     FOREIGN KEY (team_id) REFERENCES teams(team_id),
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id)

@@ -1,12 +1,17 @@
 
 export interface EligibleResult {
-  eligible: true;
-  redeemedByStaffPassId?: undefined; 
+  eligible: boolean;
+  message: string;
 }
 
-export interface NotEligibleResult {
-  eligible: false;
-  redeemedByStaffPassId: string; 
+export interface RedemptionResult {
+  redeemed: boolean;
+  message: string;
 }
 
-export type EligibilityResult = EligibleResult | NotEligibleResult;
+// export interface NotEligibleResult {
+//   eligible: false;
+//   redeemedByStaffPassId: string; 
+// }
+
+// export type EligibilityResult = EligibleResult | NotEligibleResult;
