@@ -3,9 +3,10 @@ import { StorageService } from '../../src/services/storage.service';
 import { StaffPassNotFoundError } from '../../src/errors/errors';
 
 // Mocks
-interface MockStaffRecord {
+interface MockStaff {
     staff_pass_id: string;
     team_name: string;
+    created_at: number,
 }
 
 const mockStorageService = {
@@ -34,12 +35,11 @@ describe('StaffService.lookup', () => {
     // 1. SUCCESS: Staff Pass ID found
 
     it('should return the team name when a staff pass ID is found', () => {
-        const staffId = 'BOSS_1234567890AB';
-        const expectedTeamName = 'Alpha Team';
-        
-        const mockStaff: MockStaffRecord = {
+        const staffId: string = 'BOSS_1234567890AB';
+        const mockStaff: MockStaff = {
             staff_pass_id: staffId,
-            team_name: expectedTeamName,
+            team_name: 'Alpha Team',
+            created_at: 1620761965301
         };
 
         // Initialise mock return value
@@ -53,7 +53,7 @@ describe('StaffService.lookup', () => {
         expect(mockStorageService.findStaffByPassId).toHaveBeenCalledWith(staffId);
         
         // 2. Check the returned value
-        expect(result).toBe(expectedTeamName);
+        expect(result).toBe(mockStaff);
     });
 
     // 2. FAILURE: Staff Pass ID not found

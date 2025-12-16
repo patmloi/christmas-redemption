@@ -88,7 +88,7 @@ export class CsvLoaderService {
     for (const record of records) {
         const teamId = teamIdMap.get(record.team_name.toUpperCase());
         staffRecords.push({
-          staff_pass_id: record.staff_pass_id,
+          staff_pass_id: record.staff_pass_id.toUpperCase(),
           team_id: teamId, 
           created_at: record.created_at
         }); 

@@ -7,9 +7,16 @@ export class StorageService {
 
   // Lookup staff by staff_pass_id
   findStaffByPassId(staffPassId: string): Staff | null {
-    const stmt = this.db.prepare<string, Staff>(
-      'SELECT * FROM staff WHERE staff_pass_id = ?'
-    );
+    const sql =`
+      SELECT
+        s.staff_pass_id,
+        t.team_name AS team_name,
+        s.created_at
+      FROM staff s
+      INNER JOIN teams t ON s.team_id = t.team_id
+      WHERE s.staff_pass_id = ?
+    `;
+    const stmt = this.db.prepare<string, Staff>(sql);
     const staff = stmt.get(staffPassId)
     return staff === undefined ? null : staff;
   }

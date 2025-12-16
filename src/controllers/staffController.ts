@@ -13,11 +13,8 @@ export class StaffController {
 
         // Validate Staff Pass ID before retrieval
         if (validateStaffPassId(staffPassId)){
-            const teamName = this.staffService.lookup(staffPassId);
-            res.json({ 
-                staffPassId, 
-                teamName 
-            });
+            const staff = this.staffService.lookup(staffPassId);
+            res.json(staff);
         }
 
     } catch (error) {
