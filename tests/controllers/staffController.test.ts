@@ -16,6 +16,13 @@ const mockStaffService = {
     lookup: jest.fn(),
 };
 
+// Staff
+interface MockStaff {
+    staff_pass_id: string;
+    team_name: string;
+    created_at: number,
+}
+
 // Request
 const mockRequest = (params = {}, body = {}, query = {}): Partial<Request> => ({
     params: params as any,
@@ -65,12 +72,16 @@ describe('StaffController.lookup', () => {
         // 1.1. Uppercase Staff Pass ID (Expected)
         it('hould return 200 for a valid STAFF Pass ID', () => {
         const staffIdInput = 'BOSS_1234567890AB'; // Input with lowercase
-        const staffIdProcessed = 'BOSS_1234567890AB'; // Expected uppercase
-        const mockTeamName = 'DAUNTLESS';
+        const staffIdProcessed = 'BOSS_1234567890AB'
+        const mockStaff: MockStaff = {
+            staff_pass_id: staffIdProcessed,
+            team_name: 'DAUNTLESS', 
+            created_at: 1620761965347
+        }
         
         // Initialise request and response values
         req = mockRequest({ staffPassId: staffIdInput });
-        mockStaffService.lookup.mockReturnValue(mockTeamName);
+        mockStaffService.lookup.mockReturnValue(mockStaff);
         jest.spyOn(StaffValidator, 'validateStaffPassId').mockReturnValue(true);
         // (validateStaffPassId as jest.Mock).mockReturnValue(true);
 
@@ -82,22 +93,23 @@ describe('StaffController.lookup', () => {
         expect(mockStaffService.lookup).toHaveBeenCalledWith(staffIdProcessed);
         
         // 2. Check the response status and body
-        expect(res.status).not.toHaveBeenCalled(); // Default success status is 200
-        expect(res.json).toHaveBeenCalledWith({
-            staffPassId: staffIdProcessed,
-            teamName: mockTeamName,
-        });
+        expect(res.status).not.toHaveBeenCalled();
+        expect(res.json).toHaveBeenCalledWith(mockStaff);
     });
 
     // 1.2. Lowercase Staff Pass ID
     it('hould return 200 by correctly processing a lowercase STAFF Pass ID', () => {
         const staffIdInput = 'boss_1234567890ab';
         const staffIdProcessed = 'BOSS_1234567890AB';
-        const mockTeamName = 'DAUNTLESS';
+        const mockStaff: MockStaff = {
+            staff_pass_id: staffIdProcessed,
+            team_name: 'DAUNTLESS', 
+            created_at: 1620761965347
+        }
         
         // Initialise request and response values
         req = mockRequest({ staffPassId: staffIdInput });
-        mockStaffService.lookup.mockReturnValue(mockTeamName);
+        mockStaffService.lookup.mockReturnValue(mockStaff);
         jest.spyOn(StaffValidator, 'validateStaffPassId').mockReturnValue(true);
 
         // Initialise test
@@ -109,21 +121,22 @@ describe('StaffController.lookup', () => {
         
         // 2. Check the response status and body
         expect(res.status).not.toHaveBeenCalled();
-        expect(res.json).toHaveBeenCalledWith({
-            staffPassId: staffIdProcessed,
-            teamName: mockTeamName,
-        });
+        expect(res.json).toHaveBeenCalledWith(mockStaff);
     });
 
     // 1.3. Staff Pass ID with spaces
     it('should return 200 by correctly processing a Staff Pass ID with extra spaces surrounding it', () => {
         const staffIdInput = '  BOSS_1234567890AB  ';
         const staffIdProcessed = 'BOSS_1234567890AB'; 
-        const mockTeamName = 'DAUNTLESS';
+        const mockStaff: MockStaff = {
+            staff_pass_id: staffIdProcessed,
+            team_name: 'DAUNTLESS', 
+            created_at: 1620761965347
+        }
 
         // Initialise request and response values
         req = mockRequest({ staffPassId: staffIdInput });
-        mockStaffService.lookup.mockReturnValue(mockTeamName);
+        mockStaffService.lookup.mockReturnValue(mockStaff);
         jest.spyOn(StaffValidator, 'validateStaffPassId').mockReturnValue(true);
 
         // Initialise test
@@ -135,10 +148,7 @@ describe('StaffController.lookup', () => {
         
         // 2. Check the response status and body
         expect(res.status).not.toHaveBeenCalled();
-        expect(res.json).toHaveBeenCalledWith({
-            staffPassId: staffIdProcessed,
-            teamName: mockTeamName,
-        });
+        expect(res.json).toHaveBeenCalledWith(mockStaff);
     });
 
 

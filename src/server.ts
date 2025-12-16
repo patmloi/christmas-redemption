@@ -24,7 +24,7 @@ async function startServer() {
     console.log('Loading CSV data...');
     const csvLoader = new CsvLoaderService(db);
     const csvFilePath = './data/staff-id-to-team-mapping-long.csv';
-    await csvLoader.loadStaffData(csvFilePath);
+    await csvLoader.loadData(csvFilePath);
 
     // 1.2. Services
     console.log('Initializing services...');

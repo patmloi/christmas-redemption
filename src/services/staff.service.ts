@@ -1,15 +1,16 @@
+import { Staff } from '../models/staff.model'
 import { StorageService } from './storage.service';
 import { StaffPassNotFoundError } from '../errors/errors'; 
 
 export class StaffService {
     constructor(private storage: StorageService) {}
     
-    lookup(staffPassId: string): string {
+    lookup(staffPassId: string): Staff {
         const staff = this.storage.findStaffByPassId(staffPassId);
         if (!staff) {
             throw new StaffPassNotFoundError(staffPassId);
         }
-        return staff.team_name;
+        return staff;
     }
 
     checkTeamNameExists(teamName: string): boolean {
