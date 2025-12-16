@@ -16,7 +16,7 @@ CREATE TABLE IF NOT EXISTS staff (
 
 -- Transaction Table: redemptions
 CREATE TABLE IF NOT EXISTS redemptions (
-    id BIGINT PRIMARY KEY,
+    redemption_id INTEGER PRIMARY KEY,
     team_id INTEGER UNIQUE NOT NULL, 
     staff_id INTEGER UNIQUE NOT NULL, 
     redeemed_at BIGINT NOT NULL,

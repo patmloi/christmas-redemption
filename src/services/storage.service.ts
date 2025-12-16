@@ -24,7 +24,12 @@ export class StorageService {
   // Get all team name instances
   findTeamNameInstances(teamName: string) {
     const stmt = this.db.prepare<string>(
-      'SELECT COUNT(*) AS count FROM staff WHERE team_name = ?;'
+      `
+      SELECT COUNT(*) AS count
+      FROM staff s
+      INNER JOIN teams t ON t.team_name = ?
+      WHERE s.team_id = t.team_id
+      `
     );
     const teamNameInstances = stmt.get(teamName) as { count: number } | undefined;
     return teamNameInstances ? teamNameInstances.count : 0;
@@ -32,10 +37,19 @@ export class StorageService {
 
   // Check if team has already redeemed
   findRedemption(teamName: string): Redemption | null {
-    const stmt = this.db.prepare(
-      'SELECT * FROM redemptions WHERE team_name = ?'
-    );
-    return stmt.get(teamName) as Redemption | undefined || null;
+    const sql = `
+      SELECT
+        s.staff_pass_id AS staff_pass_id,
+        t.team_name AS team_name,
+        r.redeemed_at AS redeemed_at
+      FROM redemptions r
+      INNER JOIN staff s ON r.staff_id = s.staff_id
+      INNER JOIN teams t ON r.team_id = t.team_id
+      WHERE t.team_name = ?
+    `;
+    const stmt = this.db.prepare<string, Redemption>(sql);
+    const redemption = stmt.get(teamName);
+    return redemption === undefined ? null : redemption;
   }
 
   // Create redemption record
