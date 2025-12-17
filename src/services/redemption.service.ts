@@ -1,7 +1,7 @@
 import { StorageService } from './storage.service';
 import { StaffService } from './staff.service';
 import { Redemption } from '../models/redemption.model';
-import { EligibleResult, RedemptionResult } from '../models/redemptionEligibility.model';
+import { EligibleResult, RedemptionResult } from '../models/result.model';
 import { ValidationError, TeamNameNotFoundError, AlreadyRedeemedError } from '../errors/errors';
 
 export class RedemptionService {
@@ -50,7 +50,7 @@ export class RedemptionService {
           return existingRedemption;
         }
       });
-      
+
       if (eligibleResult?.eligible === false) {
         return eligibleResult;
       }
