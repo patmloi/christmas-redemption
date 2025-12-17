@@ -39,7 +39,8 @@ export class RedemptionService {
       // This prevents race condition, where two people from the same team try to redeem
       // and both would be considered valid to redeem, but the second person cannot actually redeem due to atomicity.
 
-      const redeemTransaction = this.storage.transaction(() => {
+      // Transaction exposed and executed here to separate SQL and business logic
+      const eligibleResult = this.storage.executeTransaction(() => {
         const existingRedemption = this.checkEligibility(staff.team_name);
         if (existingRedemption.eligible) {
           const redeemedAt = Date.now();
@@ -48,8 +49,11 @@ export class RedemptionService {
         else {
           return existingRedemption;
         }
-      })
-      redeemTransaction();
+      });
+      
+      if (eligibleResult?.eligible === false) {
+        return eligibleResult;
+      }
       
       // Return redemption result by retriving newly created valid transaction
 

@@ -5,7 +5,10 @@ import { Redemption } from '../models/redemption.model';
 export class StorageService {
   constructor(private db: Database.Database) {}
 
-  transaction = this.db.transaction;
+  executeTransaction<T>(fn: () => T) {
+    const transaction = this.db.transaction(fn);
+    return transaction();
+  }
 
   // Lookup staff by staff_pass_id
   findStaffByPassId(staffPassId: string): Staff | null {
@@ -56,18 +59,14 @@ export class StorageService {
 
   // Create redemption record
   createRedemption(staffPassId: string, redeemedAt: number): void {
-    const transaction = this.db.transaction(() => {
-      // Insert redemption
-      const sql = `
-        INSERT INTO redemptions (team_id, staff_id, redeemed_at)
-        SELECT s.team_id, s.staff_id, ?
-        FROM staff s
-        WHERE s.staff_pass_id = ?
-      `;
-      const stmt = this.db.prepare<[number, string], void>(sql);
-      stmt.run(redeemedAt, staffPassId);
-    });
-    transaction();
+    const sql = `
+      INSERT INTO redemptions (team_id, staff_id, redeemed_at)
+      SELECT s.team_id, s.staff_id, ?
+      FROM staff s
+      WHERE s.staff_pass_id = ?
+    `;
+    const stmt = this.db.prepare<[number, string], void>(sql);
+    stmt.run(redeemedAt, staffPassId);
   }
 
   // Get all redemptions (for testing/admin)
