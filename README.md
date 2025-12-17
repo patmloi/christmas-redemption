@@ -95,6 +95,12 @@ The following databases are created: `teams`, `staff` and `redemptions`.
     | `staff_id` | `false` | `false` | `true` | `INTEGER` | The specific staff member who performed the redemption. If staff details are updated in the event of a promotion (`STAFF` prefix changed to `MANAGER` prefix), details will be changed in `staff` instead of changing staff-related details here. |
     | `redeemed_at` | `false` | `true` | `false` | `BIGINT` | Timestamp of when the redemption occurred.  |
 
+### SQLite choice rationale
+1. ACID compliant
+2. Small expected sacale
+    1. Not expected to be large: e.g. <10,000 employees at Govtech
+    2. Not expected to receive a large volume of requests at the same time
+
 ## End points
 
 ### End point summary table
