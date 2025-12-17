@@ -69,7 +69,7 @@ export class RedemptionService {
       else {
         const notRedeemedMsg = `${staff.staff_pass_id} redemption for ${staff.team_name} failed. Please try again.`
         const notRedeemedRes: RedemptionResult = {
-          redeemed: true, 
+          redeemed: false, 
           message: notRedeemedMsg
         };
         return notRedeemedRes;
