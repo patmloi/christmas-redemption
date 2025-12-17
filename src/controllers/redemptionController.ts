@@ -13,7 +13,7 @@ export class RedemptionController {
     try { 
       // Check if team name is a valid team name
       let { teamName } = req.params;
-      teamName = String(teamName || '').trim();
+      teamName = String(teamName || '').trim().toUpperCase();
 
       if (teamName === ''){
         throw new ValidationError('Team name cannot be an empty value.');
