@@ -69,11 +69,15 @@ describe('RedemptionController.checkEligibility', () => {
     it('should return 200 with eligible: true for a valid team name that has not redeemed', () => {
         const teamNameInput = 'DAUNTLESS';
         const teamNameProcessed = 'DAUNTLESS';
+        const expectedResponse = {
+            eligible: true,
+            message: `Team ${teamNameProcessed} has not yet redeemed their Christmas gift.`
+        };
 
         // Arrange
         req = mockRequest({ teamName: teamNameInput });
         mockStaffService.checkTeamNameExists.mockReturnValue(true);
-        mockRedemptionService.checkEligibility.mockReturnValue(true);
+        mockRedemptionService.checkEligibility.mockReturnValue(expectedResponse);
 
         // Act
         redemptionController.checkEligibility(req as Request, res as Response, next as NextFunction);
@@ -86,23 +90,25 @@ describe('RedemptionController.checkEligibility', () => {
         expect(mockRedemptionService.checkEligibility).toHaveBeenCalledWith(teamNameProcessed);
 
         // 3. Check the response status and body
-        expect(res.status).not.toHaveBeenCalled(); // Default success status is 200
-        expect(res.json).toHaveBeenCalledWith({
-            teamName: teamNameProcessed,
-            eligible: true,
-        });
+        expect(res.status).not.toHaveBeenCalled();
+        expect(res.json).toHaveBeenCalledWith(expectedResponse);
     });
 
     // 1.2. Lowercase team name
     it('should return 200 by correctly processing a lowercase team name', () => {
         const teamNameInput = 'amity';
-        const teamNameProcessed = 'amity';
+        const teamNameProcessed = 'AMITY';
+        const expectedResponse = {
+            eligible: true,
+            message: `Team ${teamNameProcessed} has not yet redeemed their Christmas gift.`
+        };
 
         // Arrange
         req = mockRequest({ teamName: teamNameInput });
         mockStaffService.checkTeamNameExists.mockReturnValue(true);
-        mockRedemptionService.checkEligibility.mockReturnValue(true);
+        mockRedemptionService.checkEligibility.mockReturnValue(expectedResponse);
 
+        
         // Act
         redemptionController.checkEligibility(req as Request, res as Response, next as NextFunction);
 
@@ -115,21 +121,22 @@ describe('RedemptionController.checkEligibility', () => {
 
         // 3. Check the response status and body
         expect(res.status).not.toHaveBeenCalled();
-        expect(res.json).toHaveBeenCalledWith({
-            teamName: teamNameProcessed,
-            eligible: true,
-        });
+        expect(res.json).toHaveBeenCalledWith(expectedResponse);
     });
 
     // 1.3. Team name with spaces
     it('should return 200 by correctly processing a team name with extra spaces surrounding it', () => {
         const teamNameInput = '  ERUDITE  ';
         const teamNameProcessed = 'ERUDITE';
+        const expectedResponse = {
+            eligible: true,
+            message: `Team ${teamNameProcessed} has not yet redeemed their Christmas gift.`
+        };
 
         // Arrange
         req = mockRequest({ teamName: teamNameInput });
         mockStaffService.checkTeamNameExists.mockReturnValue(true);
-        mockRedemptionService.checkEligibility.mockReturnValue(true);
+        mockRedemptionService.checkEligibility.mockReturnValue(expectedResponse);
 
         // Act
         redemptionController.checkEligibility(req as Request, res as Response, next as NextFunction);
@@ -143,10 +150,7 @@ describe('RedemptionController.checkEligibility', () => {
 
         // 3. Check the response status and body
         expect(res.status).not.toHaveBeenCalled();
-        expect(res.json).toHaveBeenCalledWith({
-            teamName: teamNameProcessed,
-            eligible: true,
-        });
+        expect(res.json).toHaveBeenCalledWith(expectedResponse);
     });
 
     // 2. FAILURE: Invalid team names

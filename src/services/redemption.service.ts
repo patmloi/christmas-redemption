@@ -2,7 +2,7 @@ import { StorageService } from './storage.service';
 import { StaffService } from './staff.service';
 import { Redemption } from '../models/redemption.model';
 import { EligibleResult, RedemptionResult } from '../models/result.model';
-import { ValidationError, TeamNameNotFoundError, AlreadyRedeemedError } from '../errors/errors';
+
 
 export class RedemptionService {
   constructor(
