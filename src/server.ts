@@ -9,6 +9,7 @@ import { StaffController } from './controllers/staffController';
 import { RedemptionRoutes } from './routes/redemptionRoutes';
 import { StaffRoutes } from './routes/staffRoutes';
 import config from './config/config';
+import { errorHandler } from './middlewares/error-handler.middleware';
 
 async function startServer() {
 
@@ -30,7 +31,7 @@ async function startServer() {
     console.log('Initializing services...');
     const storageService = new StorageService(db);
     const staffService = new StaffService(storageService);
-    const redemptionService = new RedemptionService(storageService);
+    const redemptionService = new RedemptionService(storageService, staffService);
 
     // 1.3. Controllers
     console.log('Initializing controllers...');
@@ -40,6 +41,7 @@ async function startServer() {
     // 2. Set up routes
     app.use('/api/staff', StaffRoutes(staffController));
     app.use('/api/redemption', RedemptionRoutes(redemptionController));
+    app.use(errorHandler);
 
     // 3. Start listening
     app.listen(config.port, () => {

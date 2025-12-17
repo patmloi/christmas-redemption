@@ -5,6 +5,11 @@ import { Redemption } from '../models/redemption.model';
 export class StorageService {
   constructor(private db: Database.Database) {}
 
+  executeTransaction<T>(fn: () => T) {
+    const transaction = this.db.transaction(fn);
+    return transaction();
+  }
+
   // Lookup staff by staff_pass_id
   findStaffByPassId(staffPassId: string): Staff | null {
     const sql =`
@@ -27,8 +32,8 @@ export class StorageService {
       `
       SELECT COUNT(*) AS count
       FROM staff s
-      INNER JOIN teams t ON t.team_name = ?
-      WHERE s.team_id = t.team_id
+      INNER JOIN teams t ON s.team_id = t.team_id
+      WHERE t.team_name = ?
       `
     );
     const teamNameInstances = stmt.get(teamName) as { count: number } | undefined;
@@ -53,11 +58,15 @@ export class StorageService {
   }
 
   // Create redemption record
-  createRedemption(teamName: string, timestamp: number): Redemption {
-    const stmt = this.db.prepare(
-      'INSERT INTO redemptions (team_name, redeemed_at) VALUES (?, ?) RETURNING *'
-    );
-    return stmt.get(teamName, timestamp) as Redemption;
+  createRedemption(staffPassId: string, redeemedAt: number): void {
+    const sql = `
+      INSERT INTO redemptions (team_id, staff_id, redeemed_at)
+      SELECT s.team_id, s.staff_id, ?
+      FROM staff s
+      WHERE s.staff_pass_id = ?
+    `;
+    const stmt = this.db.prepare<[number, string], void>(sql);
+    stmt.run(redeemedAt, staffPassId);
   }
 
   // Get all redemptions (for testing/admin)
