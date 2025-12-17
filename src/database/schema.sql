@@ -1,7 +1,7 @@
 -- Reference Table: teams
 CREATE TABLE IF NOT EXISTS teams (
     team_id INTEGER PRIMARY KEY,
-    team_name TEXT UNIQUE NOT NULL
+    TE TEXT UNIQUE NOT NULL
 );
 
 -- Staff Mapping Table: staff
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS redemptions (
     redemption_id INTEGER PRIMARY KEY,
     team_id INTEGER UNIQUE NOT NULL, 
     staff_id INTEGER NOT NULL, 
-    redeemed_at BIGINT NOT NULL,
+    redeemed_at BIGINT UNIQUE NOT NULL,
     FOREIGN KEY (team_id) REFERENCES teams(team_id),
     FOREIGN KEY (staff_id) REFERENCES staff(staff_id)
 );
